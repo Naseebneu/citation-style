@@ -11,18 +11,19 @@
        delimiter-precedes-last="always">
 
   <info>
-    <title>Custom English Numeric Thesis Style MJD</title>
-    <title-short>English Numeric MJD</title-short>
-    <id>http://www.zotero.org/styles/custom-english-numeric-thesis-style-mjd</id>
-    <link href="http://www.zotero.org/styles/custom-english-numeric-thesis-style-mjd" rel="self"/>
+    <title>Custom Thesis Numeric Style M-J-D</title>
+    <title-short>MJD Thesis Style</title-short>
+    <id>http://www.zotero.org/styles/custom-thesis-numeric-mjd</id>
+    <link href="http://www.zotero.org/styles/custom-thesis-numeric-mjd" rel="self"/>
     <author>
       <name>OpenAI</name>
     </author>
     <category citation-format="numeric"/>
-    <category field="generic-base"/>
-    <summary>Custom numeric style with [M], [J], and [D] type codes for books, journal articles, and dissertations.</summary>
+    <summary>Custom numeric thesis style for books [M], journal articles [J], and dissertations [D].</summary>
     <updated>2026-03-16T00:00:00+00:00</updated>
-    <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
+    <rights license="http://creativecommons.org/licenses/by-sa/3.0/">
+      This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License
+    </rights>
   </info>
 
   <macro name="author">
@@ -34,55 +35,62 @@
     </names>
   </macro>
 
-  <macro name="title">
-    <text variable="title"/>
-  </macro>
-
-  <macro name="type-code">
-    <choose>
-      <if type="book">
-        <text value="[M]"/>
-      </if>
-      <else-if type="article-journal">
-        <text value="[J]"/>
-      </else-if>
-      <else-if type="thesis">
-        <text value="[D]"/>
-      </else-if>
-      <else>
-        <text value="[Z]"/>
-      </else>
-    </choose>
-  </macro>
-
   <macro name="year">
     <date variable="issued">
       <date-part name="year"/>
     </date>
   </macro>
 
-  <macro name="place-publisher">
-    <group delimiter=": ">
-      <text variable="publisher-place"/>
-      <text variable="publisher"/>
+  <macro name="title-with-type">
+    <group delimiter=" ">
+      <text variable="title"/>
+      <choose>
+        <if type="book">
+          <text value="[M]"/>
+        </if>
+        <else-if type="article-journal">
+          <text value="[J]"/>
+        </else-if>
+        <else-if type="thesis">
+          <text value="[D]"/>
+        </else-if>
+      </choose>
     </group>
   </macro>
 
-  <macro name="journal-info">
-    <group delimiter=", ">
+  <macro name="book-details">
+    <group delimiter="">
+      <group delimiter=": ">
+        <text variable="publisher-place"/>
+        <text variable="publisher"/>
+      </group>
+      <text macro="year" prefix=", "/>
+      <text variable="page" prefix=", "/>
+    </group>
+  </macro>
+
+  <macro name="journal-details">
+    <group delimiter="">
       <text variable="container-title"/>
-      <text macro="year"/>
-      <group>
+      <text macro="year" prefix=", "/>
+      <group prefix=", ">
         <text variable="volume"/>
         <group prefix="(" suffix=")">
           <text variable="issue"/>
         </group>
       </group>
+      <text variable="page" prefix=": "/>
     </group>
   </macro>
 
-  <macro name="pages">
-    <text variable="page"/>
+  <macro name="thesis-details">
+    <group delimiter="">
+      <group delimiter=": ">
+        <text variable="publisher-place"/>
+        <text variable="publisher"/>
+      </group>
+      <text macro="year" prefix=", "/>
+    </group>
   </macro>
 
   <citation collapse="citation-number">
@@ -95,29 +103,18 @@
     <layout suffix=".">
       <text variable="citation-number" prefix="[" suffix="] "/>
       <text macro="author" suffix=". "/>
-      <text macro="title" suffix=" "/>
-      <text macro="type-code" suffix=". "/>
+      <text macro="title-with-type" suffix=". "/>
 
       <choose>
         <if type="book">
-          <text macro="place-publisher"/>
-          <text macro="year" prefix=", "/>
-          <text macro="pages" prefix=", "/>
+          <text macro="book-details"/>
         </if>
-
         <else-if type="article-journal">
-          <text macro="journal-info"/>
-          <text macro="pages" prefix=": "/>
+          <text macro="journal-details"/>
         </else-if>
-
         <else-if type="thesis">
-          <text macro="place-publisher"/>
-          <text macro="year" prefix=", "/>
+          <text macro="thesis-details"/>
         </else-if>
-
-        <else>
-          <text macro="year"/>
-        </else>
       </choose>
     </layout>
   </bibliography>
